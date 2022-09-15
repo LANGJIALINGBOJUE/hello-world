@@ -5,6 +5,7 @@ public class Person {
     private int age;
 
     public Person() {
+        System.out.println("无参构造方法");
     }
 
     public Person(String name, int age) {
