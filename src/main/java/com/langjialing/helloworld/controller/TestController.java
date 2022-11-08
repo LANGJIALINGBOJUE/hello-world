@@ -4,6 +4,11 @@ import org.springframework.stereotype.Controller;
 import org.springframework.ui.Model;
 import org.springframework.web.bind.annotation.RequestMapping;
 
+import java.io.Serializable;
+
+/**
+ * @author 郎家岭伯爵
+ */
 @Controller
 public class TestController {
 
