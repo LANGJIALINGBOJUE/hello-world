@@ -3,6 +3,9 @@ package com.langjialing.helloworld;
 import org.springframework.boot.SpringApplication;
 import org.springframework.boot.autoconfigure.SpringBootApplication;
 
+/**
+ * @author 郎家岭伯爵
+ */
 @SpringBootApplication
 public class HelloWorldApplication {
 
