@@ -5,6 +5,9 @@ import org.slf4j.LoggerFactory;
 import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
+/**
+ * @author 郎家岭伯爵
+ */
 @RestController
 public class HelloController {
 
