@@ -1,28 +1,38 @@
 package com.langjialing.helloworld.controller;
 
-import com.langjialing.helloworld.service.TestService;
+import com.langjialing.helloworld.mapper.UserMapper;
+import com.langjialing.helloworld.model.entity.UserEntity;
+import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
-import org.springframework.context.annotation.Bean;
-import org.springframework.stereotype.Controller;
-import org.springframework.ui.Model;
-import org.springframework.web.bind.annotation.RequestMapping;
-
-import java.io.Serializable;
+import org.springframework.web.bind.annotation.*;
 
 /**
  * @author 郎家岭伯爵
+ * @time 2023/3/14 14:45
  */
-@Controller
+@RestController
+@Slf4j
 public class TestController {
 
     @Autowired
-    TestService testService;
+    private UserMapper userMapper;
 
-    @RequestMapping("t1")
-    public String test(Model model){
-        testService.getRestTemplate();
-        model.addAttribute("msg", "Hello,Thymeleaf!");
-        return "Test";
+    @PostMapping("/t1")
+    public void test(@RequestBody UserEntity user){
+        UserEntity user1 = new UserEntity().setUserName("langjialing");
+
+        log.info(user1.getUserName());
+        user1.setUserName(user.getUserName());
+        log.info(user1.getUserName());
     }
 
+    @PostMapping("t2")
+    public void test2(@RequestBody UserEntity user){
+        userMapper.insertUser(user);
+    }
+
+    @GetMapping("/t3")
+    public String test3(@RequestParam String s){
+        return s;
+    }
 }

@@ -1,4 +1,4 @@
-package com.langjialing.helloworld.model.vo;
+package com.langjialing.helloworld.model.entity;
 
 import lombok.AllArgsConstructor;
 import lombok.Data;
@@ -7,14 +7,16 @@ import lombok.experimental.Accessors;
 
 /**
  * @author 郎家岭伯爵
- * @time 2023/3/2 9:42
+ * @time 2023/3/13 16:07
  */
 @Data
 @NoArgsConstructor
 @AllArgsConstructor
 @Accessors(chain = true)
-public class UserVO {
-    private String name;
-    private Integer age;
-    private String address;
+public class UserEntity {
+    private String userName;
+
+    private String password;
+
+    private long age;
 }

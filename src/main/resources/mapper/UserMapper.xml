@@ -1,0 +1,16 @@
+<?xml version="1.0" encoding="UTF-8"?>
+<!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
+<mapper namespace="com.langjialing.helloworld.mapper.UserMapper">
+
+    <select id="getUserList" parameterType="com.langjialing.helloworld.model.entity.UserEntity"
+            resultType="com.langjialing.helloworld.model.entity.UserEntity">
+        select user_name, password, age from `user`
+            <if test=" age != null and age != '' ">
+                where age = #{age,jdbcType=INTEGER}
+            </if>
+    </select>
+
+    <insert id="insertUser" parameterType="com.langjialing.helloworld.model.entity.UserEntity">
+        insert into `user` (user_name, password, age) value (#{userName}, #{password}, #{age})
+    </insert>
+</mapper>
