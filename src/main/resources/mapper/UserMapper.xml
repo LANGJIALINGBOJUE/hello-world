@@ -1,6 +1,21 @@
 <?xml version="1.0" encoding="UTF-8"?>
 <!DOCTYPE mapper PUBLIC "-//mybatis.org//DTD Mapper 3.0//EN" "http://mybatis.org/dtd/mybatis-3-mapper.dtd">
 <mapper namespace="com.langjialing.helloworld.mapper.UserMapper">
+    <update id="updateUsers" parameterType="java.util.List">
+        update `user` for each (item in items)
+            <set>
+                <if test="item.userName != null and item.userName != '' ">
+                    user_name = #{item.userName},
+                </if>
+                <if test="item.password != null and item.password != '' ">
+                    password = #{item.password},
+                </if>
+                <if test="item.age != null and item.age != '' ">
+                    age = #{item.age},
+                </if>
+            </set>
+            where user_name = #{item.userName}
+    </update>
 
     <select id="getUserList" parameterType="com.langjialing.helloworld.model.entity.UserEntity"
             resultType="com.langjialing.helloworld.model.entity.UserEntity">
@@ -11,6 +26,16 @@
     </select>
 
     <insert id="insertUser" parameterType="com.langjialing.helloworld.model.entity.UserEntity">
-        insert into `user` (user_name, password, age) value (#{userName}, #{password}, #{age})
+        insert into `user` (user_name, password, age)
+        values for each (item in items)
+            (#{item.userName}, #{item.password}, #{item.age})
+    </insert>
+
+    <insert id="insertUsers" parameterType="java.util.List">
+        insert into `user` (user_name, password, age)
+        values
+        <foreach collection="list" item="item" index="index" separator=",">
+            (#{item.userName}, #{item.password}, #{item.age})
+        </foreach>
     </insert>
 </mapper>

@@ -1,5 +1,6 @@
 package com.langjialing.helloworld.controller;
 
+import com.langjialing.helloworld.config.response.ResponseResult;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.LRUMap;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -20,7 +21,7 @@ public class UserController {
     private LRUMap<String, Integer> reqCache = new LRUMap<>(100);
 
     @GetMapping("/add")
-    public String addUser(@RequestParam String userId){
+    public ResponseResult<String> addUser(@RequestParam String userId){
 
         // 非空判断(忽略)...
         synchronized (this.getClass()) {
@@ -28,13 +29,14 @@ public class UserController {
             if (reqCache.containsKey(userId)) {
                 // 重复请求
                 log.info("请勿重复提交：{}", userId);
-                return "执行失败";
+                return ResponseResult.fail("执行失败！");
             }
             // 存储请求 ID
             reqCache.put(userId, 1);
         }
         // 业务代码...
         log.info("成功添加用户:{}", userId);
-        return "执行成功！";
+//        return "执行成功！";
+        return ResponseResult.success("执行成功！");
     }
 }

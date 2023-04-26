@@ -14,5 +14,7 @@ import java.util.List;
 public interface UserMapper {
     List<UserEntity> getUserList(UserEntity userEntity);
 
-    void insertUser(UserEntity user);
+    void insertUser(List<UserEntity> users);
+
+    void updateUsers(List<UserEntity> users);
 }
