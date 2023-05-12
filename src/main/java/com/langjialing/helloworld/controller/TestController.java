@@ -1,5 +1,6 @@
 package com.langjialing.helloworld.controller;
 
+import cn.hutool.core.collection.CollUtil;
 import com.langjialing.helloworld.mapper.UserMapper;
 import com.langjialing.helloworld.model.entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
@@ -211,6 +212,50 @@ public class TestController {
         Integer d = 200;
         System.out.println(c == d); // 输出 false
 
+    }
+
+    @GetMapping("/t15")
+    public void test15(){
+        List<Integer> list = new ArrayList<>();
+        for (int i = 0; i < 8; i++) {
+            list.add(i + 1);
+        }
+
+        List<Map> list1 = new ArrayList<>();
+        for (int i=0; i < list.size(); i++) {
+            Map<String, String> map = new HashMap();
+            map.put("num", list.get(i).toString());
+            list1.add(map);
+            if (list1.size() == 3 || i == list.size() - 1){
+                userMapper.updateUsersInfo(list1, 25);
+                list1.clear();
+            }
+        }
+
+    }
+
+    @GetMapping("t16")
+    public void test16() throws InterruptedException {
+        Boolean flag = null;
+        if (flag==null) {
+            System.out.println("true");
+        }
+
+        UserEntity user = new UserEntity();
+        if (user.getUserName()=="1"){
+            System.out.println("user1");
+        }
+        if (user.getUserName() == null){
+            System.out.println("null");
+        }
+
+        Thread.sleep(10000);
+    }
+
+    @GetMapping("t17")
+    public void test17() throws InterruptedException {
+        test16();
+        System.out.println("t17");
     }
 
 }

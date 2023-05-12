@@ -16,6 +16,13 @@
             </set>
             where user_name = #{item.userName}
     </update>
+    <update id="updateUsersInfo">
+        update `user` set
+            age = #{age}
+            where <foreach collection="usersInfo" item="userInfo" index="index" separator=" or ">
+                 user_id = #{userInfo.num}
+            </foreach>
+    </update>
 
     <select id="getUserList" parameterType="com.langjialing.helloworld.model.entity.UserEntity"
             resultType="com.langjialing.helloworld.model.entity.UserEntity">

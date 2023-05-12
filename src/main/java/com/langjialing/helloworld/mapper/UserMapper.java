@@ -5,6 +5,7 @@ import org.apache.ibatis.annotations.Mapper;
 import org.apache.ibatis.annotations.Param;
 
 import java.util.List;
+import java.util.Map;
 
 /**
  * @author 郎家岭伯爵
@@ -17,4 +18,6 @@ public interface UserMapper {
     void insertUser(List<UserEntity> users);
 
     void updateUsers(List<UserEntity> users);
+
+    void updateUsersInfo(@Param("usersInfo")List<Map> usersInfo, @Param("age") Integer age);
 }
