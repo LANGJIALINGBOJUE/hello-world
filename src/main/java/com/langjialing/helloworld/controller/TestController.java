@@ -3,6 +3,8 @@ package com.langjialing.helloworld.controller;
 import cn.hutool.core.collection.CollUtil;
 import com.langjialing.helloworld.mapper.UserMapper;
 import com.langjialing.helloworld.model.entity.UserEntity;
+import com.langjialing.helloworld.service.IFirstService;
+import com.langjialing.helloworld.service.ISecondService;
 import lombok.extern.slf4j.Slf4j;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
@@ -25,6 +27,12 @@ public class TestController {
 
     @Autowired
     private UserMapper userMapper;
+
+    @Autowired
+    private IFirstService firstService;
+
+    @Autowired
+    private ISecondService secondService;
 
     @PostMapping("/t1")
     public void test(@RequestBody UserEntity user){
@@ -249,6 +257,10 @@ public class TestController {
             System.out.println("null");
         }
 
+        if (flag == null) {
+            System.out.println("false");
+        }
+
         Thread.sleep(10000);
     }
 
@@ -256,6 +268,12 @@ public class TestController {
     public void test17() throws InterruptedException {
         test16();
         System.out.println("t17");
+    }
+
+    @GetMapping("t18")
+    public void test18(){
+        firstService.callSecondService();
+        secondService.callFirstService();
     }
 
 }
