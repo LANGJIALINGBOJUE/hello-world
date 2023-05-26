@@ -32,17 +32,9 @@
             </if>
     </select>
 
-    <insert id="insertUser" parameterType="com.langjialing.helloworld.model.entity.UserEntity">
+    <insert id="insertUser" parameterType="com.langjialing.helloworld.model.entity.UserEntity" useGeneratedKeys="true" keyProperty="id">
         insert into `user` (user_name, password, age)
-        values for each (item in items)
-            (#{item.userName}, #{item.password}, #{item.age})
+        values (#{userName}, #{password}, #{age})
     </insert>
 
-    <insert id="insertUsers" parameterType="java.util.List">
-        insert into `user` (user_name, password, age)
-        values
-        <foreach collection="list" item="item" index="index" separator=",">
-            (#{item.userName}, #{item.password}, #{item.age})
-        </foreach>
-    </insert>
 </mapper>

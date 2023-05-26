@@ -1,6 +1,8 @@
 package com.langjialing.helloworld.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONObject;
 import com.langjialing.helloworld.mapper.UserMapper;
 import com.langjialing.helloworld.model.entity.UserEntity;
 import com.langjialing.helloworld.service.IFirstService;
@@ -274,6 +276,81 @@ public class TestController {
     public void test18(){
         firstService.callSecondService();
         secondService.callFirstService();
+    }
+
+    @GetMapping("t19")
+    public void test19(){
+        List list = new ArrayList();
+        list.add(1);
+        list.add(0);
+
+        // 判断list中的元素是否都为0或1
+        boolean allMatch = list.stream().allMatch(e -> e.equals(0) || e.equals(1));
+        System.out.println(allMatch);
+    }
+
+    @GetMapping("t20")
+    public void test20(){
+        UserEntity user1 = new UserEntity();
+        user1.setUserName("123");
+
+        UserEntity user2 = new UserEntity();
+        user2.setUserName(user1.getUserName());
+        user2.setPassword(user1.getPassword());
+
+        if (user2.getUserName() != null){
+            System.out.println("user2Name不为空");
+        }
+
+        if (user2.getPassword() != null){
+            System.out.println("user2Password不为空");
+        }
+    }
+
+    @GetMapping("/t21")
+    public void test21(){
+        String s = "[1,2]";
+        // 把s转为List
+        List<Integer> list = JSON.parseArray(s, Integer.class);
+    }
+
+    @GetMapping("/t22")
+    public void test22(){
+        String s = "{\n" +
+                "            \"regno\": \"\",\n" +
+                "            \"xzqh\": \"福建省宁德市柘荣县\",\n" +
+                "            \"zczj\": \"\",\n" +
+                "            \"creditcode\": \"113522317438174256\",\n" +
+                "            \"jgmc\": \"柘荣县应急管理局\",\n" +
+                "            \"jgdz\": \"福建省宁德市柘荣县河洋西路1号\",\n" +
+                "            \"bgrq\": \"\",\n" +
+                "            \"url\": \"\",\n" +
+                "            \"zcrq\": \"\",\n" +
+                "            \"zfrq\": \"\",\n" +
+                "            \"jyfw\": \"\",\n" +
+                "            \"jjhydm\": \"\",\n" +
+                "            \"jydz\": \"\",\n" +
+                "            \"jgdm\": \"743817425\",\n" +
+                "            \"jglx\": \"机关\",\n" +
+                "            \"bzrq\": \"\",\n" +
+                "            \"fddbr\": \"温科强\",\n" +
+                "            \"bzjg\": \"柘荣县事业单位登记管理局\",\n" +
+                "            \"jyzt\": \"正常\",\n" +
+                "            \"jjlxdm\": \"\"\n" +
+                "        }" +
+                "\n" +
+                "\n";
+        JSONObject jsonObject = JSONObject.parseObject(s);
+        System.out.println("1"+jsonObject.get("bzjg"));
+        System.out.println("2"+jsonObject.get("bzjg1"));
+
+    }
+
+    @GetMapping("/t23")
+    public String test23() throws InterruptedException {
+        // 等待半秒
+        Thread.sleep(500);
+        return "t23";
     }
 
 }

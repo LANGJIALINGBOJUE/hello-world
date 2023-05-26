@@ -1,9 +1,13 @@
 package com.langjialing.helloworld.controller;
 
 import com.langjialing.helloworld.config.response.ResponseResult;
+import com.langjialing.helloworld.mapper.UserMapper;
+import com.langjialing.helloworld.model.entity.UserEntity;
 import lombok.extern.slf4j.Slf4j;
 import org.apache.commons.collections4.map.LRUMap;
+import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.web.bind.annotation.GetMapping;
+import org.springframework.web.bind.annotation.RequestBody;
 import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
@@ -14,6 +18,9 @@ import org.springframework.web.bind.annotation.RestController;
 @RestController
 @Slf4j
 public class UserController {
+
+    @Autowired
+    private UserMapper userMapper;
 
     /**
      * 最大容量 100 个，根据 LRU 算法淘汰数据的 Map 集合
@@ -38,5 +45,12 @@ public class UserController {
         log.info("成功添加用户:{}", userId);
 //        return "执行成功！";
         return ResponseResult.success("执行成功！");
+    }
+
+    @GetMapping("/addUser")
+    public Integer addUser(){
+        UserEntity userEntity = new UserEntity().setUserName("郎家岭伯爵").setPassword("123456").setAge(18L);
+        userMapper.insertUser(userEntity);
+        return userEntity.getId();
     }
 }
