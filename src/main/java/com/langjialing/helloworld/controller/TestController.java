@@ -1,6 +1,8 @@
 package com.langjialing.helloworld.controller;
 
 import cn.hutool.core.collection.CollUtil;
+import cn.hutool.core.date.DateUtil;
+import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langjialing.helloworld.mapper.UserMapper;
@@ -98,12 +100,37 @@ public class TestController {
         Calendar calendar1 = Calendar.getInstance();
         calendar1.set(Calendar.DAY_OF_MONTH, 0);
         String format2 = sdf2.format(calendar1.getTime());
-        log.info(format2);
+        log.info("========" + format2);
+
+        // 获取上上月最后一天
+        calendar1.add(Calendar.MONTH, -1);
+        String format4 = sdf2.format(calendar1.getTime());
+        log.info(format4);
+
         // 获取去年最后一天
         Calendar calendar2 = Calendar.getInstance();
         calendar2.set(Calendar.DAY_OF_YEAR, 0);
         String format3 = sdf2.format(calendar2.getTime());
         log.info(format3);
+
+        // 获取指定年月的最后一天
+        Calendar calendar3 = Calendar.getInstance();
+        calendar3.set(Calendar.YEAR, 2020);
+        calendar3.set(Calendar.MONTH, 03);
+        calendar3.set(Calendar.DAY_OF_MONTH, 0);
+        String format5 = sdf2.format(calendar3.getTime());
+        log.info(format5);
+
+        // 获取当前年月日
+        Calendar calendar4 = Calendar.getInstance();
+        String format6 = sdf2.format(calendar4.getTime());
+        log.info(format6);
+
+        // 获取当前月
+        Calendar calendar5 = Calendar.getInstance();
+        calendar5.add(Calendar.MONTH, 0);
+        String format7 = sdf1.format(calendar5.getTime());
+        log.info(format7);
     }
 
     @GetMapping("/t6")
@@ -353,4 +380,62 @@ public class TestController {
         return "t23";
     }
 
+    @GetMapping("/t24")
+    public void test24(){
+        if (1==2){
+            System.out.println("1=1");
+        } else
+        if(2==2){
+            System.out.println("2=2");
+        } else
+        if (3==3){
+            System.out.println("3=3");
+        }
+    }
+
+    @GetMapping("/t25")
+    public void test25(){
+        UserEntity userEntity = new UserEntity();
+        if (userEntity.getUserName()==null){
+            System.out.println("null");
+        }
+    }
+
+    @GetMapping("/t26")
+    public void test26(){
+        List<Integer> list = new ArrayList();
+
+        for (Integer integer : list) {
+            System.out.println("hello");
+        }
+    }
+
+    @GetMapping("t27")
+    public void test27(){
+        String s = "{custMastCode:\"123\"}";
+        JSONObject jsonObject = JSONObject.parseObject(s);
+        System.out.println(jsonObject.get("custMastCode").toString());
+    }
+
+    @GetMapping("t28")
+    public void test28(){
+        String s = "202306";
+        String s1 = s.substring(0,4);
+        System.out.println("s1:" + s1);
+        String s2 = s.substring(4,6);
+        System.out.println(Integer.valueOf(s2));
+        System.out.println("s2:" + s2);
+    }
+
+    @GetMapping("t29")
+    public void test(){
+        Map<String, String> map = new HashMap<>();
+        map.put("1", "1");
+        map.put("hello", "world");
+        System.out.println(map.toString());
+        System.out.println(JSONObject.toJSONString(map));
+        // 使用hutool类把map转为String
+        String s = JSONUtil.toJsonStr(map);
+        System.out.println(s);
+    }
 }
