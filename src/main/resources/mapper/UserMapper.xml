@@ -30,6 +30,12 @@
             <if test=" age != null and age != '' ">
                 where age = #{age,jdbcType=INTEGER}
             </if>
+            <if test=" userName != null and userName != '' ">
+                where user_name = #{userName,jdbcType=VARCHAR}
+            </if>
+    </select>
+    <select id="getUserById" resultType="com.langjialing.helloworld.model.entity.UserEntity">
+        select user_name, password, age from `user` where user_id = #{id}
     </select>
 
     <insert id="insertUser" parameterType="com.langjialing.helloworld.model.entity.UserEntity" useGeneratedKeys="true" keyProperty="id">

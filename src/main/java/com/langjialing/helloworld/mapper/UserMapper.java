@@ -15,6 +15,8 @@ import java.util.Map;
 public interface UserMapper {
     List<UserEntity> getUserList(UserEntity userEntity);
 
+    UserEntity getUserById(@Param("id") Integer id);
+
     void insertUser(UserEntity user);
 
     void updateUsers(List<UserEntity> users);

@@ -25,7 +25,7 @@ import java.util.stream.Collectors;
  * @author 郎家岭伯爵
  * @time 2023/3/14 14:45
  */
-@RestController
+@RestController("/test")
 @Slf4j
 public class TestController {
 
@@ -438,4 +438,86 @@ public class TestController {
         String s = JSONUtil.toJsonStr(map);
         System.out.println(s);
     }
+
+    @GetMapping("/t30")
+    public void test30(){
+        JSONObject jsonObject = new JSONObject();
+        jsonObject.put("1", "1");
+        List<JSONObject> list = new ArrayList<>();
+        list.add(jsonObject);
+        jsonObject.clear();
+        System.out.println(list.toString());
+    }
+
+    @GetMapping("/t31")
+    public void test31() throws InterruptedException {
+        String s = "12";
+        if ("12".equals(s)){
+            throw new RuntimeException("hello");
+        }
+    }
+
+    @GetMapping("/t32")
+    public void test32(){
+        UserEntity userById = userMapper.getUserById(19);
+        System.out.println(userById.getUserName());
+    }
+
+    @GetMapping("/t33")
+    public void test33(){
+        BigDecimal bigDecimal = new BigDecimal("100");
+        BigDecimal bigDecimal1 = new BigDecimal("5");
+        System.out.println(bigDecimal.divide(bigDecimal1, 2, BigDecimal.ROUND_HALF_UP));
+    }
+
+    /**
+     * 这个输出结果是由于`JSONObject`类在处理循环引用时采用了特殊的处理方式。循环引用是指在 JSON 对象中存在相互引用的情况。
+     *
+     * 在您的代码中，当您将`superPackage`和`fastPackage`同时添加到`monthJson`和`yearJson`时，它们实际上形成了一个循环引用。为了处理这种情况，`JSONObject`类将循环引用转换为特殊的引用标记，即`$ref`。
+     *
+     * 具体地说，当您将`superPackage`添加到`yearJson`时，它会检测到它已经存在于`monthJson`中，因此不会将完整的对象添加到`yearJson`中，而是创建一个特殊的引用标记`{"$ref":"$.month.superPackage"}`。这表示`yearJson`中的`superPackage`属性引用了`monthJson`中的`superPackage`属性。
+     *
+     * 同样地，当您将`fastPackage`添加到`yearJson`时，它也会创建一个特殊的引用标记`{"$ref":"$.month.fastPackage"}`，表示`yearJson`中的`fastPackage`属性引用了`monthJson`中的`fastPackage`属性。
+     *
+     * 这种处理方式是为了避免无限递归和循环引用导致的问题，并保证 JSON 对象的正确性。当您使用`JSONObject`的`toString()`方法将其转换为字符串时，会自动应用这种引用标记的处理机制。
+     *
+     * 所以最终输出的 JSON 字符串中，`yearJson`中的`superPackage`属性和`fastPackage`属性被替换为了对`monthJson`中相应属性的引用标记`{"$ref":"$.month.superPackage"}`和`{"$ref":"$.month.fastPackage"}`，以表示它们与`monthJson`中的属性是相同的对象。
+     */
+    @GetMapping("/t34")
+    public void test34(){
+        JSONObject jsonObject = new JSONObject();
+
+        JSONObject monthJson = new JSONObject();
+        JSONObject yearJson = new JSONObject();
+
+        JSONObject superPackage = new JSONObject();
+        JSONObject fastPackage = new JSONObject();
+
+        JSONObject monthSuperPackage = new JSONObject();
+        JSONObject monthFastPackage = new JSONObject();
+
+        monthJson.put("superPackage", monthSuperPackage);
+        monthJson.put("fastPackage", monthFastPackage);
+        yearJson.put("superPackage", superPackage);
+        yearJson.put("fastPackage", fastPackage);
+
+        jsonObject.put("year", yearJson);
+        jsonObject.put("month", monthJson);
+
+        System.out.println(JSON.toJSONString(jsonObject));
+    }
+
+    @GetMapping("t35")
+    public void test35(){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setUserName("1111111111111");
+
+        List<UserEntity> list = userMapper.getUserList(userEntity);
+
+        System.out.println(list.size());
+
+        UserEntity userById = userMapper.getUserById(1212);
+        System.out.println(userById.getUserName());
+    }
+
 }
