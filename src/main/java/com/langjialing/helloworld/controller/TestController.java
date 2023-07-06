@@ -1,7 +1,6 @@
 package com.langjialing.helloworld.controller;
 
-import cn.hutool.core.collection.CollUtil;
-import cn.hutool.core.date.DateUtil;
+import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
@@ -17,6 +16,7 @@ import org.springframework.web.bind.annotation.*;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
+import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
@@ -131,14 +131,25 @@ public class TestController {
         calendar5.add(Calendar.MONTH, 0);
         String format7 = sdf1.format(calendar5.getTime());
         log.info(format7);
+
+        // 获取当前时间
+        SimpleDateFormat sdf3 = new SimpleDateFormat("yyyyMMddHHmmss");
+        String format8 = sdf3.format(new Date());
+        log.info(format8);
+
+        // 获取当前时间的前一年
+        Calendar calendar6 = Calendar.getInstance();
+        calendar6.add(Calendar.YEAR, -1);
+        String format9 = sdf3.format(calendar6.getTime());
+        log.info(format9);
     }
 
     @GetMapping("/t6")
     public void test6(){
-        BigDecimal num1 = new BigDecimal("100");
-        BigDecimal num2 = new BigDecimal("20");
+        BigDecimal num1 = new BigDecimal("10");
+        BigDecimal num2 = new BigDecimal("3");
         // 计算num1除以num2的结果，保留两位小数，四舍五入
-        BigDecimal divide = num1.divide(num2, 2, RoundingMode.HALF_UP);
+        BigDecimal divide = num1.divide(num2, 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
         // 计算num1减去num2的结果
         BigDecimal subtract = num1.subtract(num2);
         log.info(divide.toString());
@@ -518,6 +529,49 @@ public class TestController {
 
         UserEntity userById = userMapper.getUserById(1212);
         System.out.println(userById.getUserName());
+    }
+
+    @GetMapping("t36")
+    public void test36(){
+        String s = "202312";
+
+        SimpleDateFormat format = new SimpleDateFormat("yyyyMM");
+        try {
+            Date date = format.parse(s); // 将字符串解析为日期对象
+
+            Calendar calendar = Calendar.getInstance();
+            calendar.setTime(date);
+
+            calendar.add(Calendar.MONTH, 1); // 添加一个月
+
+            Date nextMonth = calendar.getTime();
+            String nextMonthString = format.format(nextMonth); // 将日期对象格式化为字符串
+
+            System.out.println("输入的年月：" + s);
+            System.out.println("下一个月：" + nextMonthString);
+        } catch (ParseException e) {
+            e.printStackTrace();
+        }
+
+    }
+
+    @GetMapping("t37")
+    public void test37(){
+        // 生成一个uuid
+        System.out.println(UUID.randomUUID().toString());
+    }
+
+    @GetMapping("t38")
+    public void test38() {
+        String s = "Hello World";
+        // 使用hutool工具类对s进行md5加密，取32位小写
+        String s1 = SecureUtil.md5(s);
+        System.out.println(s1);
+    }
+
+    @GetMapping("t39")
+    public void test39(){
+        System.out.println("====hello\t==== \n===world\t====");
     }
 
 }
