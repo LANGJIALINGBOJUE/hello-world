@@ -3,6 +3,7 @@ package com.langjialing.helloworld.controller;
 import cn.hutool.crypto.SecureUtil;
 import cn.hutool.json.JSONUtil;
 import com.alibaba.fastjson.JSON;
+import com.alibaba.fastjson.JSONArray;
 import com.alibaba.fastjson.JSONObject;
 import com.langjialing.helloworld.mapper.UserMapper;
 import com.langjialing.helloworld.model.entity.UserEntity;
@@ -13,6 +14,7 @@ import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
 
+import javax.validation.Valid;
 import java.math.BigDecimal;
 import java.math.RoundingMode;
 import java.text.DecimalFormat;
@@ -146,14 +148,11 @@ public class TestController {
 
     @GetMapping("/t6")
     public void test6(){
-        BigDecimal num1 = new BigDecimal("10");
+        BigDecimal num1 = new BigDecimal("2");
         BigDecimal num2 = new BigDecimal("3");
-        // 计算num1除以num2的结果，保留两位小数，四舍五入
+        // 计算num1除以num2的结果，保留四位小数，四舍五入
         BigDecimal divide = num1.divide(num2, 4, RoundingMode.HALF_UP).multiply(new BigDecimal(100)).setScale(2, RoundingMode.HALF_UP);
-        // 计算num1减去num2的结果
-        BigDecimal subtract = num1.subtract(num2);
-        log.info(divide.toString());
-        log.info(subtract.toString());
+        log.info(divide + "%");
     }
 
     @GetMapping("/t7")
@@ -471,6 +470,7 @@ public class TestController {
     @GetMapping("/t32")
     public void test32(){
         UserEntity userById = userMapper.getUserById(19);
+        System.out.println(userById);
         System.out.println(userById.getUserName());
     }
 
@@ -574,4 +574,174 @@ public class TestController {
         System.out.println("====hello\t==== \n===world\t====");
     }
 
+    @GetMapping("t40")
+    public void test40(){
+        JSONObject jsonObject1 = new JSONObject();
+        jsonObject1.put("1", "1");
+
+        JSONObject jsonObject2 = new JSONObject();
+        jsonObject2.put("2", "2");
+
+        JSONObject jsonObject3 = new JSONObject();
+        jsonObject3.put("3", "3");
+
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(jsonObject1);
+        jsonArray.add(jsonObject2);
+        jsonArray.add(jsonObject3);
+
+        System.out.println("jsonArray为：" + jsonArray);
+
+        // 创建一个新的JSONArray，并把jsonArray赋值给它
+        JSONArray array = jsonArray;
+        // 反转新的JSONArray
+        Collections.reverse(array);
+
+        System.out.println("此时的jsonArray为：" + jsonArray);
+    }
+
+    @GetMapping("t41")
+    public void test41(){
+        String s = "{\n" +
+                "    \"userName\": \"langjialingbojue\",\n" +
+                "    \"password\": \"123456\",\n" +
+                "    \"age\": 20\n" +
+                "}";
+
+        UserEntity userEntity = JSON.parseObject(s, UserEntity.class);
+        System.out.println(userEntity.getUserName());
+        System.out.println(userEntity.getPassword());
+        System.out.println(userEntity.getId());
+    }
+
+    @GetMapping("t42")
+    public void test42(){
+        String s = "[1,2,3,4,5]";
+        List<Integer> list = JSON.parseArray(s, Integer.class);
+        System.out.println(list.size());
+        System.out.println(list.get(2));
+    }
+
+    @GetMapping("t43")
+    public void test43(){
+        // 匹配元素：使用anyMatch()方法判断列表中是否存在满足指定条件的元素。
+        List<Integer> numbers1 = Arrays.asList(1, 2, 3, 4, 5);
+        boolean anyEven = numbers1.stream().anyMatch(n -> n % 2 == 0);
+        System.out.println("anyEven:" + anyEven);
+
+        // 匹配元素：使用allMatch()方法判断列表中是否所有元素都满足指定条件。
+        List<Integer> numbers2 = Arrays.asList(1, 2, 3, 4, 5);
+        boolean allEven = numbers2.stream().allMatch(n -> n % 2 == 0);
+        System.out.println("allEven:" + allEven);
+
+        // 归约操作：使用reduce()方法将列表中的元素进行归约操作，例如求和或求最大值。
+        List<Integer> numbers3 = Arrays.asList(1, 2, 3, 4, 5);
+        int sum = numbers3.stream().reduce(0, (a, b) -> a + b);
+        System.out.println("sum:" + sum);
+
+        // 收集结果：使用collect()方法将流中的元素收集到集合或其他数据结构中。
+        List<Integer> numbers4 = Arrays.asList(1, 2, 3, 4, 5);
+        Set<Integer> numberSet = numbers4.stream().collect(Collectors.toSet());
+        System.out.println(numberSet);
+
+        // 去重元素：使用distinct()方法去除列表中的重复元素。
+        List<Integer> numbers5 = Arrays.asList(1, 2, 2, 3, 3, 4, 5);
+        List<Integer> distinctNumbers = numbers5.stream().distinct().collect(Collectors.toList());
+        System.out.println("distinctNumbers:" + distinctNumbers);
+
+        // 丢弃元素：使用dropWhile()方法丢弃列表中满足指定条件的元素，直到条件不再满足为止。
+        List<Integer> numbers6 = Arrays.asList(1, 2, 3, 4, 5);
+        List<Integer> droppedNumbers = numbers6.stream().dropWhile(n -> n < 3).collect(Collectors.toList());
+        System.out.println("droppedNumbers:" + droppedNumbers);
+
+    }
+
+    @GetMapping("t44")
+    public void test44(){
+        // 创建一个整数列表
+        List<Integer> numbers = new ArrayList<>();
+        numbers.add(1);
+        numbers.add(2);
+        numbers.add(3);
+        numbers.add(4);
+        numbers.add(5);
+
+        // 使用Lambda表达式进行列表筛选和计算平方和
+        int sumOfSquares = numbers.stream()          // 将列表转换为流
+                // 筛选偶数
+                .filter(n -> n % 2 == 0)
+                // 计算每个数的平方
+                .map(n -> n * n)
+                // 计算平方和
+                .reduce(0, Integer::sum);
+
+        // 打印结果
+        System.out.println("平方和: " + sumOfSquares);
+    }
+
+    @GetMapping("t45")
+    public void test45(){
+        MathOperation mathOperation = (int a, int b, int c) -> a + b + c;
+        System.out.println(mathOperation.operation(1, 2, 3));
+
+        StringOperation stringOperation = (String s, String s1, String s2) -> {
+            String ss = s + s1;
+            return ss + s1 + s2;
+        };
+        System.out.println(stringOperation.operation("Hello", "World", "!"));
+    }
+
+    @RequestMapping(value = "t46/{id}/{name}", method = RequestMethod.GET)
+    public String test46(@PathVariable(value = "name") String id, @PathVariable(value = "id") String name){
+        return "id为：" + id + "，name为：" + name;
+    }
+
+    interface MathOperation {
+        int operation(int a, int b, int c);
+    }
+
+    interface StringOperation {
+        String operation(String s, String s1, String s2);
+    }
+
+    @PostMapping("t47")
+    public void test47(@RequestBody @Valid UserEntity userEntity){
+        System.out.println(userEntity.getUserName());
+        System.out.println(userEntity.getPassword());
+        System.out.println(userEntity.getId());
+
+        Map<String, String> map = new HashMap<>(10);
+        for (int i = 0; i < 20; i++) {
+            map.put("key" + i, "value" + i);
+        }
+        System.out.println(map);
+    }
+    
+    @GetMapping("/t48")
+    public void test48(){
+        JSONArray jsonArray = new JSONArray();
+        jsonArray.add(null);
+        System.out.println(jsonArray);
+    }
+
+    @GetMapping("/t49")
+    public void test49(){
+        List<Integer> list = new ArrayList<>();
+        list.add(1);
+        list.add(2);
+        list.add(3);
+        list.add(4);
+        list.add(5);
+
+        Iterator<Integer> iterator = list.iterator();
+        while (iterator.hasNext()){
+            Integer next = iterator.next();
+            if (next == 3){
+                break;
+            }
+            iterator.remove();
+        }
+        System.out.println(list);
+
+    }
 }
