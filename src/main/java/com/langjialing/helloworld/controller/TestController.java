@@ -10,6 +10,7 @@ import com.langjialing.helloworld.model.entity.UserEntity;
 import com.langjialing.helloworld.service.IFirstService;
 import com.langjialing.helloworld.service.ISecondService;
 import lombok.extern.slf4j.Slf4j;
+import org.apache.catalina.User;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.validation.annotation.Validated;
 import org.springframework.web.bind.annotation.*;
@@ -22,6 +23,7 @@ import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
+import java.util.stream.Stream;
 
 /**
  * @author 郎家岭伯爵
@@ -743,5 +745,62 @@ public class TestController {
         }
         System.out.println(list);
 
+        for (Integer item : list) {
+            if (item == 3){
+                list.remove(item);
+            }
+        }
     }
+
+    @GetMapping("/t50")
+    public long test50(){
+        UserEntity userEntity = new UserEntity();
+        System.out.println(userEntity.getAge());
+        System.out.println(userEntity.getPassword());
+
+        userEntity.setAge(30);
+        System.out.println(userEntity.getAge());
+        return userEntity.getAge();
+    }
+    
+    @GetMapping("/t51")
+    public void test51(){
+        UserEntity userEntity = new UserEntity();
+        userEntity.setAge(25);
+
+        System.out.println(userEntity);
+
+        handleList(userEntity);
+
+        System.out.println(userEntity);
+    }
+
+    private void handleList(UserEntity userEntity) {
+        userEntity.setAge(30);
+    }
+
+    @GetMapping("/t52")
+    public void test52(){
+        UserEntity userEntity = new UserEntity();
+        System.out.println("userEntity的初始值：" + userEntity);
+
+        userEntity.setAge(30);
+        System.out.println("在业务逻辑中对userEntity再次赋值：" + userEntity);
+    }
+
+    @GetMapping("/t53")
+    public void test53(){
+        List<Integer> l = Stream.of(1,2).collect(Collectors.toList());
+
+        l.add(3);
+        System.out.println(l);
+        // 字符串型
+        System.out.println(Stream.of("lang", "jia", "ling").collect(Collectors.toList()));
+
+        List<Integer> list0 = Arrays.asList(1,2,3);
+        list0.add(4);
+        System.out.println(list0);
+        List<String> list = Arrays.asList("apple", "banana", "orange");
+    }
+
 }

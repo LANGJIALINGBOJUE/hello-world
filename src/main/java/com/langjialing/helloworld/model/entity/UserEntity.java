@@ -24,5 +24,5 @@ public class UserEntity {
 
     private String password;
 
-    private long age;
+    private long age = 25;
 }
