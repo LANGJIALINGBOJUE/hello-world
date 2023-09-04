@@ -29,7 +29,8 @@ import java.util.stream.Stream;
  * @author 郎家岭伯爵
  * @time 2023/3/14 14:45
  */
-@RestController("/test")
+@RestController
+@RequestMapping(value = "test")
 @Slf4j
 public class TestController {
 
