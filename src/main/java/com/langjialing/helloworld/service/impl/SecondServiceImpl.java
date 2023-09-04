@@ -5,6 +5,8 @@ import com.langjialing.helloworld.service.ISecondService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * @author 郎家岭伯爵
  * @time 2023/5/15 11:04
@@ -12,8 +14,6 @@ import org.springframework.stereotype.Service;
 @Service
 public class SecondServiceImpl implements ISecondService {
 
-    @Autowired
-    private IFirstService firstService;
 
     @Override
     public void sayHello() {
@@ -22,6 +22,7 @@ public class SecondServiceImpl implements ISecondService {
 
     @Override
     public void callFirstService() {
-        firstService.sayHello();
+
     }
+
 }

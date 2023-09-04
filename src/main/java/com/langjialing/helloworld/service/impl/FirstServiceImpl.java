@@ -5,6 +5,8 @@ import com.langjialing.helloworld.service.ISecondService;
 import org.springframework.beans.factory.annotation.Autowired;
 import org.springframework.stereotype.Service;
 
+import javax.annotation.Resource;
+
 /**
  * @author 郎家岭伯爵
  * @time 2023/5/15 11:03
@@ -12,7 +14,7 @@ import org.springframework.stereotype.Service;
 @Service
 public class FirstServiceImpl implements IFirstService {
 
-    @Autowired
+    @Resource
     private ISecondService secondService;
 
     @Override
