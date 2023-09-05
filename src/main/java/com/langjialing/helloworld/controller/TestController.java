@@ -780,7 +780,7 @@ public class TestController {
         userEntity.setAge(30);
     }
 
-    @GetMapping("/t52")
+    @GetMapping(value = "/t52")
     public void test52(){
         UserEntity userEntity = new UserEntity();
         System.out.println("userEntity的初始值：" + userEntity);
@@ -804,4 +804,58 @@ public class TestController {
         List<String> list = Arrays.asList("apple", "banana", "orange");
     }
 
+    @GetMapping("/t54")
+    public void test54(){
+        List<Integer> list = Stream.of(1, -7, 3, -6, 5).collect(Collectors.toList());
+        System.out.println("排序之前：" + list);
+
+        Comparator<Integer> customComparator = Comparator.comparingInt(Math::abs);
+        list = list.stream()
+                .sorted(customComparator)
+                .collect(Collectors.toList());
+        System.out.println("使用Comparator比较器进行绝对值排序之后：" + list);
+    }
+
+    @GetMapping("/t55")
+    public void test55(){
+        List<UserEntity> list = Stream.of(new UserEntity().setUserName("小明").setAge(15),
+                new UserEntity().setUserName("小红").setAge(30),
+                new UserEntity().setUserName("小强").setAge(25)).collect(Collectors.toList());
+        System.out.println("排序之前：" + list);
+
+        Comparator<UserEntity> userEntityComparator = Comparator.comparingLong(UserEntity::getAge);
+        List<UserEntity> collect = list.stream()
+                .sorted(userEntityComparator)
+                .collect(Collectors.toList());
+        System.out.println("使用Comparator比较器排序之后：" + collect);
+
+        List<UserEntity> collect1 = list.stream()
+                .sorted(userEntityComparator.reversed())
+                .collect(Collectors.toList());
+        System.out.println("把Comparator按倒序进行排序：" + collect1);
+    }
+
+    @GetMapping("/t56")
+    public void test56(){
+        Map<String, Integer> myMap = new HashMap<>();
+        myMap.put("apple", 3);
+        myMap.put("banana", 2);
+        myMap.put("cherry", 1);
+        myMap.put("date", 4);
+        System.out.println("排序之前：" + myMap);
+
+        // 创建一个Comparator对象，按键长度进行排序
+        Comparator<String> keyComparator = Comparator.comparing(String::length);
+
+        Map<String, Integer> sortedMap = myMap.entrySet()
+                .stream()
+                .sorted(Map.Entry.comparingByKey(keyComparator))
+                .collect(Collectors.toMap(
+                        Map.Entry::getKey,
+                        Map.Entry::getValue,
+                        (e1, e2) -> e1,
+                        LinkedHashMap::new
+                ));
+        System.out.println("使用比较器排序之后：" + sortedMap);
+    }
 }
