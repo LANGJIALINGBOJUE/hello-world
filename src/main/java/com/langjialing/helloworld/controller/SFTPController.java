@@ -4,10 +4,7 @@ import com.jcraft.jsch.SftpException;
 import com.langjialing.helloworld.config.util.SFTP;
 import com.langjialing.helloworld.config.util.SftpConfig;
 import lombok.extern.slf4j.Slf4j;
-import org.apache.poi.ss.usermodel.Cell;
-import org.apache.poi.ss.usermodel.Row;
-import org.apache.poi.ss.usermodel.Sheet;
-import org.apache.poi.ss.usermodel.Workbook;
+import org.apache.poi.ss.usermodel.*;
 import org.apache.poi.xssf.usermodel.XSSFWorkbook;
 import org.springframework.beans.factory.annotation.Value;
 import org.springframework.web.bind.annotation.GetMapping;
@@ -15,7 +12,6 @@ import org.springframework.web.bind.annotation.RequestMapping;
 import org.springframework.web.bind.annotation.RestController;
 
 import java.io.FileInputStream;
-import java.io.FileNotFoundException;
 import java.io.IOException;
 import java.util.List;
 
@@ -92,6 +88,28 @@ public class SFTPController {
                         default:
                             System.out.print("");
                     }
+                    // 列之间用制表符分隔
+                    System.out.print("\t");
+                }
+                // 换行处理下一行
+                System.out.println();
+            }
+        } catch (IOException e) {
+            e.printStackTrace();
+        }
+
+        try (FileInputStream fis = new FileInputStream(excelFilePath);
+             Workbook workbook = new XSSFWorkbook(fis)) {
+
+            // 获取第一个工作表
+            Sheet sheet = workbook.getSheetAt(0);
+
+            // 格式化数据
+            DataFormatter dataFormatter = new DataFormatter();
+            for (Row row : sheet) {
+                for (Cell cell : row) {
+                    String cellValue = dataFormatter.formatCellValue(cell);
+                    System.out.print(cellValue);
                     // 列之间用制表符分隔
                     System.out.print("\t");
                 }
