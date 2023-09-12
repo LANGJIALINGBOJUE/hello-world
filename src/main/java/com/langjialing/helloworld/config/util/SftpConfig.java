@@ -6,26 +6,14 @@ import org.springframework.context.annotation.Configuration;
 import javax.annotation.Resource;
 
 
-@Configuration
 public class SftpConfig {
 
-    @Value("${sftp.host}")
     private String hostname;
-
-    @Value("${sftp.port}")
     private Integer port;
-
-    @Value("${sftp.user}")
     private String username;
-
-    @Value("${sftp.password}")
     private String password;
-
-    @Value("${sftp.timeout}")
     private Integer timeout;
     private Resource privateKey;
-
-    @Value("${sftp.remoteRootPath}")
     private String remoteRootPath;
     private String fileSuffix;
 
