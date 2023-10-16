@@ -5,13 +5,10 @@ import org.slf4j.Logger;
 import org.slf4j.LoggerFactory;
 
 import java.io.*;
-import java.util.ArrayList;
-import java.util.List;
-import java.util.Properties;
-import java.util.Vector;
+import java.util.*;
 
 
-public class SFTP {
+public class SftpUtil {
 
     private long count;
     /**
@@ -21,7 +18,7 @@ public class SFTP {
 
     private long sleepTime;
 
-    private static final Logger logger = LoggerFactory.getLogger(SFTP.class);
+    private static final Logger logger = LoggerFactory.getLogger(SftpUtil.class);
 
     /**
      * 连接sftp服务器
@@ -63,7 +60,7 @@ public class SFTP {
     }
 
     /**
-     * 上传文件
+     * 上传文件。
      *
      * @param directory  上传的目录
      * @param uploadFile 要上传的文件
@@ -95,7 +92,98 @@ public class SFTP {
     }
 
     /**
-     * 下载文件
+     * 同时上传多个文件。
+     * @param directory 上传的目录
+     * @param uploadFiles 要上传的文件
+     * @param sftpConfig
+     */
+    public void uploadMultipleFiles(String directory, List<String> uploadFiles, SftpConfig sftpConfig) {
+        ChannelSftp sftp = connect(sftpConfig);
+        try {
+            sftp.cd(directory);
+        } catch (SftpException e) {
+            try {
+                sftp.mkdir(directory);
+                sftp.cd(directory);
+            } catch (SftpException e1) {
+                throw new RuntimeException("ftp创建文件路径失败" + directory);
+            }
+        }
+
+        for (String uploadFile : uploadFiles) {
+            File file = new File(uploadFile);
+            if (file.exists()) {
+                try (InputStream inputStream = new FileInputStream(file)) {
+                    sftp.put(inputStream, file.getName());
+                } catch (Exception e) {
+                    throw new RuntimeException("sftp异常" + e);
+                }
+            } else {
+                throw new RuntimeException("文件不存在: " + uploadFile);
+            }
+        }
+
+        disConnect(sftp);
+    }
+
+    /**
+     * 上传文件夹。
+     * @param directory 上传的目录
+     * @param localDirectory 要上传的文件
+     * @param sftpConfig
+     */
+    public void uploadDirectory(String directory, String localDirectory, SftpConfig sftpConfig) {
+        ChannelSftp sftp = connect(sftpConfig);
+        try {
+            sftp.cd(directory);
+        } catch (SftpException e) {
+            try {
+                sftp.mkdir(directory);
+                sftp.cd(directory);
+            } catch (SftpException e1) {
+                throw new RuntimeException("ftp创建文件路径失败" + directory);
+            }
+        }
+
+        File localDir = new File(localDirectory);
+        if (localDir.isDirectory()) {
+            uploadDirectoryRecursively(sftp, localDir);
+        }
+
+        disConnect(sftp);
+    }
+
+    /**
+     * 上传文件。如果文件夹内含多级下级文件夹，则递归创建。
+     * @param sftp
+     * @param localDir 本地文件夹。
+     */
+    private void uploadDirectoryRecursively(ChannelSftp sftp, File localDir) {
+        for (File file : Objects.requireNonNull(localDir.listFiles())) {
+            if (file.isDirectory()) {
+                String newRemotePath = file.getName() + "/";
+                try {
+                    sftp.mkdir(newRemotePath);
+                    sftp.cd(newRemotePath);
+                    uploadDirectoryRecursively(sftp, file);
+                    sftp.cd("..");
+                } catch (SftpException e) {
+                    logger.info("ftp创建文件路径失败:" + e.getMessage());
+                    throw new RuntimeException("ftp创建文件路径失败:" + newRemotePath);
+                }
+            } else if (file.isFile()) {
+                try (InputStream inputStream = new FileInputStream(file)) {
+                    sftp.put(inputStream, file.getName());
+                } catch (Exception e) {
+                    throw new RuntimeException("sftp异常" + e);
+                }
+            }
+        }
+    }
+
+
+    /**
+     * 下载文件。
      *
      * @param directory    下载目录
      * @param downloadFile 下载的文件
@@ -135,13 +223,12 @@ public class SFTP {
     }
 
     /**
-     * 下载远程文件夹下的所有文件
-     *
-     * @param remoteFilePath
-     * @param localDirPath
+     * 下载远程文件夹下的所有文件。
+     * @param remoteFilePath 要下载的文件路径。
+     * @param localDirPath 本地保存位置。
      * @throws Exception
      */
-    public void getFileDir(String remoteFilePath, String localDirPath, SftpConfig sftpConfig) throws Exception {
+    public void downloadDirFile(String remoteFilePath, String localDirPath, SftpConfig sftpConfig) throws Exception {
         File localDirFile = new File(localDirPath);
         // 判断本地目录是否存在，不存在需要新建各级目录
         if (!localDirFile.exists()) {
@@ -165,6 +252,61 @@ public class SFTP {
         }
         disConnect(channelSftp);
     }
+
+    /**
+     * 下载远程文件夹下的所有文件（如果文件夹包含子文件夹，则递归下载）。
+     * @param remoteDirPath 要下载的目录路径。
+     * @param localDirPath  本地保存位置。
+     * @param sftpConfig
+     * @throws Exception
+     */
+    public void downloadDirectory(String remoteDirPath, String localDirPath, SftpConfig sftpConfig) throws Exception {
+        File localDirFile = new File(localDirPath);
+        if (!localDirFile.exists()) {
+            localDirFile.mkdirs();
+        }
+
+        if (logger.isInfoEnabled()) {
+            logger.info("SFTP文件服务器文件夹[{}],下载到本地目录[{}]", remoteDirPath, localDirFile);
+        }
+
+        ChannelSftp channelSftp = connect(sftpConfig);
+        downloadRemoteDirectory(channelSftp, remoteDirPath, localDirPath);
+        disConnect(channelSftp);
+    }
+
+    /**
+     * 下载文件夹（如果文件夹含多级文件夹，则递归下载）。
+     * @param channelSftp
+     * @param remoteDirPath 要下载的目录路径。
+     * @param localDirPath 本地保存位置。
+     * @throws SftpException
+     */
+    private void downloadRemoteDirectory(ChannelSftp channelSftp, String remoteDirPath, String localDirPath) throws SftpException {
+        Vector<ChannelSftp.LsEntry> lsEntries = channelSftp.ls(remoteDirPath);
+
+        for (ChannelSftp.LsEntry entry : lsEntries) {
+            String fileName = entry.getFilename();
+            if (checkFileName(fileName)) {
+                continue;
+            }
+            String remoteFilePath = remoteDirPath + "/" + fileName;
+            String localFilePath = localDirPath + File.separator + fileName;
+
+            if (entry.getAttrs().isDir()) {
+                // 如果是目录，递归下载子目录
+                File localDirFile = new File(localFilePath);
+                if (!localDirFile.exists()) {
+                    localDirFile.mkdirs();
+                }
+                downloadRemoteDirectory(channelSftp, remoteFilePath, localFilePath);
+            } else {
+                // 如果是文件，下载文件
+                channelSftp.get(remoteFilePath, localFilePath);
+            }
+        }
+    }
+
 
     /**
      * 关闭流
@@ -226,7 +368,7 @@ public class SFTP {
      * @return
      * @throws SftpException
      */
-    public List<String> listFiles(String directory, SftpConfig sftpConfig) throws SftpException {
+    public List<String> listFiles(String directory, SftpConfig sftpConfig) throws SftpException, UnsupportedEncodingException {
         ChannelSftp sftp = connect(sftpConfig);
         List fileNameList = new ArrayList();
         try {
@@ -234,7 +376,8 @@ public class SFTP {
         } catch (SftpException e) {
             return fileNameList;
         }
-        Vector vector = sftp.ls(directory);
+        sftp.setFilenameEncoding("UTF-8");
+        Vector<?> vector = sftp.ls(directory);
         for (int i = 0; i < vector.size(); i++) {
             if (vector.get(i) instanceof ChannelSftp.LsEntry) {
                 ChannelSftp.LsEntry lsEntry = (ChannelSftp.LsEntry) vector.get(i);
@@ -261,12 +404,12 @@ public class SFTP {
         }
     }
 
-    public SFTP(long count, long sleepTime) {
+    public SftpUtil(long count, long sleepTime) {
         this.count = count;
         this.sleepTime = sleepTime;
     }
 
-    public SFTP() {
+    public SftpUtil() {
 
     }
 }

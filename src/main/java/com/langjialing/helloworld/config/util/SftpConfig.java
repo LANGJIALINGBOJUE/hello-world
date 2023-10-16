@@ -1,11 +1,11 @@
 package com.langjialing.helloworld.config.util;
 
-import org.springframework.beans.factory.annotation.Value;
-import org.springframework.context.annotation.Configuration;
-
 import javax.annotation.Resource;
 
 
+/**
+ * @author 郎家岭伯爵
+ */
 public class SftpConfig {
 
     private String hostname;
