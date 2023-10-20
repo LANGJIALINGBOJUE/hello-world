@@ -181,4 +181,9 @@ public class TestController11 {
             }
         }
     }
+
+    @GetMapping("/t12")
+    public void test12(@RequestParam Integer i){
+        System.out.println(i);
+    }
 }
