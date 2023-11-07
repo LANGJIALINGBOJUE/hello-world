@@ -14,6 +14,7 @@ import java.io.*;
 import java.text.ParseException;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.stream.Collectors;
 
 /**
  * @Author 郎家岭伯爵
@@ -186,4 +187,42 @@ public class TestController11 {
     public void test12(@RequestParam Integer i){
         System.out.println(i);
     }
+
+    @GetMapping("/t13")
+    public String  test13(@RequestParam Integer i){
+        Integer i1 = i++;
+        Integer i2 = ++i;
+        Integer i3 = i--;
+        Integer i4 = --i;
+        return "i++为:" + i1 + "; ++i为:" + i2 + "; i--为:" + i3 + "; --i为:" + i4;
+    }
+
+    @GetMapping("/t14")
+    public void test14(){
+        UserEntity userEntity1 = new UserEntity().setUserName("langjialing1").setAge(18);
+        UserEntity userEntity2 = new UserEntity().setUserName("langjialing2").setAge(19);
+        UserEntity userEntity3 = new UserEntity().setUserName("langjialing3").setAge(20);
+
+        List<UserEntity> list = new ArrayList<>();
+        list.add(userEntity1);
+        list.add(userEntity2);
+        list.add(userEntity3);
+
+        List<Long> collect = list.stream().map(UserEntity::getAge).collect(Collectors.toList());
+        System.out.println(collect);
+
+        list = list.stream().filter(item -> !(item.getAge() > 19)).collect(Collectors.toList());
+        System.out.println(list);
+    }
+
+    @GetMapping("/t15")
+    public void test15(){
+        String s = "{\"userName\": \"langjialing\"}";
+
+        UserEntity userEntity = JSON.parseObject(s, UserEntity.class);
+        System.out.println(userEntity.getUserName());
+        System.out.println(userEntity.getAge());
+        System.out.println(userEntity.getPassword());
+    }
+
 }
