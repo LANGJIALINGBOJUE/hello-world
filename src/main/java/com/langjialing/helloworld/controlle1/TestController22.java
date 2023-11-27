@@ -222,8 +222,19 @@ public class TestController22 {
 
         System.out.println("排序后：" + list1);
 
+        // 指定分页参数
+        int pageSize = 2; // 每页的大小
+        int page = 2;     // 要获取的页数（从1开始）
+
+        // 计算起始索引和结束索引
+        int startIndex = (page - 1) * pageSize;
+        int endIndex = Math.min(pageSize, list.size() - (page - 1) * pageSize);
+
         List<Map<String, Object>> key = list.stream()
-                .sorted(Comparator.comparing(m -> (int) m.get("key"))).skip(2).limit(3).collect(Collectors.toList());
+                .sorted(Comparator.comparing(m -> (int) m.get("key")))
+                .skip(startIndex)
+                .limit(endIndex)
+                .collect(Collectors.toList());
 
         System.out.println("排序加分页后：" + key);
 
