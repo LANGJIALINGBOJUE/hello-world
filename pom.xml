@@ -14,6 +14,15 @@
     <name>HelloWorld</name>
     <description>Demo project for Spring Boot</description>
 
+    <profiles>
+        <profile>
+            <id>dev_env</id>
+        </profile>
+        <profile>
+            <id>prod_env</id>
+        </profile>
+    </profiles>
+
     <properties>
         <java.version>11</java.version>
         <jdbc.username>root</jdbc.username>
