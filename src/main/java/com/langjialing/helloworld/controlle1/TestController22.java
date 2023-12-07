@@ -7,10 +7,12 @@ import com.langjialing.helloworld.model.entity.UserEntity;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
+import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
 import java.lang.reflect.Constructor;
+import java.text.SimpleDateFormat;
 import java.util.*;
 import java.util.stream.Collectors;
 
@@ -242,7 +244,19 @@ public class TestController22 {
 
     @GetMapping("/t13")
     public void test13(){
-        int[] res = new int[2];
+        SimpleDateFormat sdf = new SimpleDateFormat("yyyyMM");
+        Calendar calendar = Calendar.getInstance();
+        calendar.add(Calendar.MONTH, 1);
+        System.out.println(sdf.format(calendar.getTime()));
+    }
 
+    @GetMapping(value = "/t14", produces = {"text/html;charset=utf-8"})
+    public String test14(@RequestParam String s){
+        List<String> list = new ArrayList<>(List.of("(1)", "（2）"));
+        if (list.contains(s)){
+            return s;
+        } else {
+            return "不包含";
+        }
     }
 }

@@ -13,9 +13,13 @@
     <version>0.0.1-SNAPSHOT</version>
     <name>HelloWorld</name>
     <description>Demo project for Spring Boot</description>
+
     <properties>
         <java.version>11</java.version>
+        <jdbc.username>root</jdbc.username>
+        <jdbc.password></jdbc.password>
     </properties>
+
     <dependencies>
         <dependency>
             <groupId>org.springframework.boot</groupId>
@@ -140,6 +144,16 @@
             </plugin>
 
         </plugins>
+
+        <!--配置资源文件对应的信息-->
+        <resources>
+            <resource>
+                <!--设定配置文件对应的位置目录，支持使用属性动态设定路径-->
+                <directory>${project.basedir}/src/main/resources</directory>
+                <!--开启对配置文件的资源加载过滤-->
+                <filtering>true</filtering>
+            </resource>
+        </resources>
     </build>
 
 </project>
