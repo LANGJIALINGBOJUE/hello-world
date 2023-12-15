@@ -259,4 +259,20 @@ public class TestController22 {
             return "不包含";
         }
     }
+
+    @GetMapping("/t15")
+    public String test15(@RequestParam String s){
+        if (StringUtils.isEmpty(s)){
+            return "不可为空！";
+        }
+        return s.substring(0,2);
+    }
+
+    @GetMapping("/t16")
+    public String test16(@RequestParam String s){
+        if (StringUtils.isEmpty(s)){
+            return "不可为空!";
+        }
+        return JSON.toJSONString(s.contains("12"));
+    }
 }
