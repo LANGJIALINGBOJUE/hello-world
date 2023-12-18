@@ -275,4 +275,42 @@ public class TestController22 {
         }
         return JSON.toJSONString(s.contains("12"));
     }
+
+    @GetMapping("/t17")
+    public void test17(){
+        Map<String, String> map = new HashMap<>(10);
+        map.put("1", "1");
+        map.put("2", "2");
+
+        Map<String, String> map1 = new HashMap<>(10);
+        map1.put("1", "11");
+        map1.put("2", "21");
+
+        Map<String, String> map2 = new HashMap<>(10);
+        map2.put("1", "12");
+        map2.put("2", "22");
+
+        List<Map<String, String>> list = new ArrayList<>();
+        list.add(map);
+        list.add(map1);
+        list.add(map2);
+
+        List<String> collect = list.stream().map(item -> item.get("1")).collect(Collectors.toList());
+        System.out.println(collect);
+    }
+
+    @GetMapping("/t18")
+    public void test18(){
+        UserEntity userEntity = new UserEntity().setUserName("langjialing");
+        UserEntity userEntity1 = new UserEntity().setUserName("langjialing1");
+        UserEntity userEntity2 = new UserEntity().setUserName("langjialing2");
+
+        List<UserEntity> list = new ArrayList<>();
+        list.add(userEntity);
+        list.add(userEntity1);
+        list.add(userEntity2);
+
+        List<String> collect = list.stream().map(UserEntity::getUserName).collect(Collectors.toList());
+        System.out.println(collect);
+    }
 }
