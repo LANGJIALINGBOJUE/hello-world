@@ -301,9 +301,9 @@ public class TestController22 {
 
     @GetMapping("/t18")
     public void test18(){
-        UserEntity userEntity = new UserEntity().setUserName("langjialing");
-        UserEntity userEntity1 = new UserEntity().setUserName("langjialing1");
-        UserEntity userEntity2 = new UserEntity().setUserName("langjialing2");
+        UserEntity userEntity = new UserEntity().setUserName("langjialing").setAge(18);
+        UserEntity userEntity1 = new UserEntity().setUserName("langjialing1").setAge(20);
+        UserEntity userEntity2 = new UserEntity().setUserName("langjialing2").setAge(25);
 
         List<UserEntity> list = new ArrayList<>();
         list.add(userEntity);
@@ -312,5 +312,10 @@ public class TestController22 {
 
         List<String> collect = list.stream().map(UserEntity::getUserName).collect(Collectors.toList());
         System.out.println(collect);
+
+        List<String> collect1 = list.stream()
+                .filter(item -> item.getAge() > 19)
+                .map(UserEntity::getUserName).collect(Collectors.toList());
+        System.out.println(collect1);
     }
 }
