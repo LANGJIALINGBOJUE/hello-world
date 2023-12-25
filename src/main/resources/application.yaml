@@ -3,11 +3,11 @@ spring:
     name: 郎家岭伯爵
   redis:
     ssl: false
-    host: 127.0.0.1
-    port: 6379
+    host: redis-18896.c251.east-us-mz.azure.cloud.redislabs.com
+    port: 18896
     database: 0
     timeout: 1000
-    password:
+    password: 6ZQUfEmkUDtiVENJQY9RaXK2XzpyrPEG
     lettuce:
       pool:
         max-active: 100

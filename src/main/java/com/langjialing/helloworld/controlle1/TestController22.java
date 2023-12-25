@@ -1,9 +1,16 @@
 package com.langjialing.helloworld.controlle1;
 
+import cn.hutool.core.date.DateTime;
+import cn.hutool.core.date.DateUnit;
+import cn.hutool.core.date.DateUtil;
 import com.alibaba.fastjson.JSON;
 import com.alibaba.fastjson.JSONObject;
 import com.langjialing.helloworld.mapper.UserMapper;
 import com.langjialing.helloworld.model.entity.UserEntity;
+import org.apache.tomcat.jni.Time;
+import org.springframework.beans.factory.annotation.Autowired;
+import org.springframework.data.redis.core.RedisTemplate;
+import org.springframework.data.redis.core.StringRedisTemplate;
 import org.springframework.util.StringUtils;
 import org.springframework.web.bind.annotation.GetMapping;
 import org.springframework.web.bind.annotation.RequestMapping;
@@ -11,9 +18,9 @@ import org.springframework.web.bind.annotation.RequestParam;
 import org.springframework.web.bind.annotation.RestController;
 
 import javax.annotation.Resource;
-import java.lang.reflect.Constructor;
 import java.text.SimpleDateFormat;
 import java.util.*;
+import java.util.concurrent.TimeUnit;
 import java.util.stream.Collectors;
 
 /**
@@ -26,6 +33,12 @@ public class TestController22 {
 
     @Resource
     private UserMapper userMapper;
+
+    /**
+     * 由于@Resource注解根据名称来进行注入，因此这里需要指定“name”属性。否则会发生异常。
+     */
+    @Resource(name = "stringRedisTemplate")
+    private StringRedisTemplate redisTemplate;
 
     @GetMapping("/t1")
     public String test1(){
@@ -317,5 +330,25 @@ public class TestController22 {
                 .filter(item -> item.getAge() > 19)
                 .map(UserEntity::getUserName).collect(Collectors.toList());
         System.out.println(collect1);
+    }
+
+    @GetMapping("/t19")
+    public void test19() throws InterruptedException {
+        Date startDate = new Date();
+
+        for (int i = 0; i < 1000000; i++) {
+            String name = "langjialing" + i;
+            String value = "郎家岭伯爵" + i;
+
+            redisTemplate.opsForValue().set(name, value, 1, TimeUnit.DAYS);
+
+            if (i % 100 == 0){
+                System.out.println(name);
+            }
+        }
+
+        Date entDate = new Date();
+        long between = DateUtil.between(startDate, entDate, DateUnit.SECOND);
+        System.out.println("耗时：" + between + "秒");
     }
 }
