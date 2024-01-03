@@ -36,9 +36,14 @@ class HelloWorldApplicationTests {
               Channel channel = connection.createChannel();
         ){
             channel.queueDeclare(QUEUE_NAME, false, false, false, null);
-            String message = "Hello World!";
-            channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
-            System.out.println(" [x] Sent '" + message + "'");
+
+            for (int i = 0; i < 100; i++) {
+                String message = "Hello World!";
+                message += i;
+                channel.basicPublish("", QUEUE_NAME, null, message.getBytes());
+                System.out.println(" [x] Sent '" + message + "'");
+            }
+
         } catch (IOException | TimeoutException e) {
             e.printStackTrace();
         }
@@ -62,6 +67,12 @@ class HelloWorldApplicationTests {
             System.out.println(" [x] Received '" + message + "'");
         };
         channel.basicConsume(QUEUE_NAME, true, deliverCallback, consumerTag -> { });
+    }
+
+    @Test
+    void test4(){
+        System.err.println(111);
+        System.out.println(111);
     }
 
 }

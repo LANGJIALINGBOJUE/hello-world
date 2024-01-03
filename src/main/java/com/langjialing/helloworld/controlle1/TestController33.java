@@ -8,6 +8,10 @@ import org.springframework.web.bind.annotation.RestController;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
+import javax.servlet.http.HttpServletRequest;
+import javax.servlet.http.HttpServletResponse;
+import java.util.Arrays;
+
 /**
  * @author 郎家岭伯爵
  * @time 2023/12/26 16:17
@@ -55,5 +59,17 @@ public class TestController33 {
             // 一次获取多个值
             jedis.mget("langjialing11", "langjialing22");
         }
+    }
+
+    @GetMapping("/t2")
+    public void test2(HttpServletRequest httpServletRequest, HttpServletResponse httpServletResponse){
+        System.out.println(httpServletRequest.getRequestURL());
+        System.out.println(Arrays.toString(httpServletRequest.getCookies()));
+        System.out.println(httpServletRequest.getMethod());
+        System.out.println(httpServletRequest.getQueryString());
+        System.out.println(httpServletRequest.getRemoteAddr());
+        System.out.println(httpServletRequest.getRemoteHost());
+
+        httpServletResponse.setStatus(5);
     }
 }
