@@ -26,4 +26,24 @@ class HelloWorld1ApplicationTests {
         }
     }
 
+    @Test
+    public void testRabbitmqFanout() {
+        // 指定交换机名称
+        String exchangeName = "langjialing.fanout";
+
+        String message = "Hello,Rabbitmq_Fanout";
+        System.out.println(message);
+        rabbitTemplate.convertAndSend(exchangeName, "", message);
+    }
+
+    @Test
+    public void testRabbitmqTopic() {
+        // 指定交换机名称
+        String exchangeName = "langjialing.topic";
+
+        String message = "Hello,Rabbitmq_Fanout";
+        System.out.println(message);
+        rabbitTemplate.convertAndSend(exchangeName, "china.weather", message);
+    }
+
 }
