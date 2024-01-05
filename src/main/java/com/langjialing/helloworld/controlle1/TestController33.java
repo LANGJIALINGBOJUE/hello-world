@@ -19,7 +19,7 @@ import java.util.Arrays;
 
 @RestController
 @RequestMapping("/test33")
-public class TestController33 {
+public class TestController33 implements Runnable{
     @Value("${spring.redis.host}")
     private String redisHost;
 
@@ -71,5 +71,27 @@ public class TestController33 {
         System.out.println(httpServletRequest.getRemoteHost());
 
         httpServletResponse.setStatus(5);
+    }
+
+    @GetMapping("/t3")
+    public String test3(){
+
+        TestController33 t1 = new TestController33();
+
+        Thread thread = new Thread(t1);
+        thread.start();
+
+        return "test3";
+    }
+
+    @Override
+    public void run() {
+        try{
+            Thread.sleep(5000);
+            System.out.println("Thread run()...");
+        } catch (Exception e){
+            e.printStackTrace();
+        }
+
     }
 }
