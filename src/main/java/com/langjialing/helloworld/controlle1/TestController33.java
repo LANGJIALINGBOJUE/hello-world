@@ -1,10 +1,10 @@
 package com.langjialing.helloworld.controlle1;
 
+import cn.hutool.core.io.FileUtil;
+import com.langjialing.helloworld.model.entity.UserEntity;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -92,6 +92,25 @@ public class TestController33 implements Runnable{
         } catch (Exception e){
             e.printStackTrace();
         }
+    }
 
+    @GetMapping("/t4/{id}")
+    public String test4(@PathVariable(value = "id") Integer id){
+        if (id.equals(5)){
+            return "普通用户";
+        }
+        if (id.equals(10)){
+            return "VIP用户";
+        }
+        return "异常用户";
+    }
+
+    @GetMapping("/t5")
+    public void test5(){
+        ClassLoader classLoader = UserEntity.class.getClassLoader();
+        System.out.println(classLoader);
+
+        ClassLoader classLoader1 = FileUtil.class.getClassLoader();
+        System.out.println(classLoader1);
     }
 }

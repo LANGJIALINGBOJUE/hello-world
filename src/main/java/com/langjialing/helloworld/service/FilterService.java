@@ -23,10 +23,11 @@ public class FilterService implements Filter {
         String ip = request.getRemoteHost();
         List<String> ipList = new ArrayList<>();
         ipList.add("0:0:0:0:0:0:0:1");
+        ipList.add("127.0.0.1");
         // Font Awesome 图标网址IP，在test1.html中使用
         ipList.add("104.18.22.52");
         if (!ipList.contains(ip)){
-            System.out.println("非法IP");
+            System.out.println("非法IP：" + ip);
             return;
         }
 
