@@ -1,4 +1,4 @@
-package extendsdemo.framedemo;
+package framedemo;
 
 /**
  * @author 郎家岭伯爵
