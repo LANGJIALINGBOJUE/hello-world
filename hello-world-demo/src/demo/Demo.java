@@ -6,7 +6,12 @@ package demo;
  */
 public class Demo {
     public static void main(String[] args) {
-        int i = 0;
-        System.out.println(++i);
+        String a = "1";
+        String b = "2";
+        String c = "12";
+        String d = a  + b;
+        String d1 = "1" + "2";
+        System.out.println(c==d);
+        System.out.println(c==d1);
     }
 }
