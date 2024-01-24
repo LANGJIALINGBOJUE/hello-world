@@ -6,7 +6,8 @@ package extendsdemo;
  */
 public class Demo {
     public static void main(String[] args) {
-        Students students = new Students();
-        students.say();
+        Students students1 = new Students();
+        Students students2 = new Students(20);
+        students2.say();
     }
 }
