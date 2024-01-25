@@ -11,6 +11,9 @@ public class Person {
     public Person(){
         System.out.println("Person 无参构造");
         System.out.println("Person age:" + age);
+
+        toAge();
+        System.out.println("Person toAge:" + age);
     }
 
     public Person(int age){
@@ -19,5 +22,9 @@ public class Person {
 
     public void say(){
         System.out.println("这是一个人。");
+    }
+
+    public Person toAge(){
+        return null;
     }
 }
