@@ -4,10 +4,7 @@ import cn.hutool.core.io.FileUtil;
 import com.langjialing.helloworld.model.entity.UserEntity;
 import org.apache.commons.pool2.impl.GenericObjectPoolConfig;
 import org.springframework.beans.factory.annotation.Value;
-import org.springframework.web.bind.annotation.GetMapping;
-import org.springframework.web.bind.annotation.PathVariable;
-import org.springframework.web.bind.annotation.RequestMapping;
-import org.springframework.web.bind.annotation.RestController;
+import org.springframework.web.bind.annotation.*;
 import redis.clients.jedis.Jedis;
 import redis.clients.jedis.JedisPool;
 
@@ -109,11 +106,17 @@ public class TestController33 implements Runnable{
     }
 
     @GetMapping("/t5")
-    public void test5(){
+    public void test5() throws Exception{
         ClassLoader classLoader = UserEntity.class.getClassLoader();
         System.out.println(classLoader);
 
         ClassLoader classLoader1 = FileUtil.class.getClassLoader();
         System.out.println(classLoader1);
+        Thread.sleep(10000);
+    }
+
+    @PostMapping("/t6")
+    public void test6(Integer id, String name){
+        System.out.println("id:" + id + ";name:" + name);
     }
 }
